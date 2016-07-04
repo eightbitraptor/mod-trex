@@ -1,24 +1,25 @@
 #define __KERNEL__
 #define MODULE
 
-#include <linux/modversions.h>
 #include <linux/module.h>
 
-#include <linux/tty.h>      /* console_print() interface */
-
-void main()
+int things(void)
 {
-        console_print("I'm in ur kernel");
+        printk(KERN_CRIT "I'm in ur kernel");
+        return 0;
 }
 
 int init_module()
 {
-        console_print("Hello, world - this is the kernel speaking\n");
-        main();
+        printk("Hello, world - this is the kernel speaking\n");
+        things();
         return 0;
 }
 
 void cleanup_module()
 {
-        console_print("Short is the life of an LKM\n");
+        printk("Short is the life of an LKM\n");
 }
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("eightbitraptor");

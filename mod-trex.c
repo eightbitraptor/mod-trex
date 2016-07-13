@@ -60,13 +60,17 @@ static int __init trex_init(void)
                 printk(KERN_ALERT "Failed to create the device\n");
                 return PTR_ERR(charDevice);
         }
-        printk(KERN_INFO "device class created correctly\n");
+        printk(KERN_INFO "mod-trex successfully initialised\n");
         return 0;
 }
 
 static void __exit trex_exit(void)
 {
-        printk("Short is the life of an LKM\n");
+        device_destroy(charClass, MKDEV(majorNumber, 0));
+        class_unregister(charClass);
+        class_destroy(charClass);
+        unregister_chrdev(majorNumber, DEVICE_NAME);
+        printk(KERN_INFO "mod-trex successfully unloaded\n");
 }
 
 module_init(trex_init);

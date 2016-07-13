@@ -2,6 +2,19 @@
 #include <linux/device.h>
 #include <linux/fs.h>
 
+/*
+In order to mount this device as a normal user we need to configure
+udev to recognise this driver and mount it with the correct
+permissions when the kernel module is loaded.
+
+  touch /etc/udev/rules.d/99-mod-trex.rules
+  echo 'KERNEL=="trex", SUBSYSTEM=="trex", MODE="0666"' \
+      > /etc/udev/rules.d/99-mod-trex.rules
+
+Where the KERNEL and SUBSYSTEM values correspond to the DEVICE_NAME
+and CLASS_NAME definitions below
+ */
+
 #define DEVICE_NAME "trex"
 #define CLASS_NAME "trex"
 

@@ -1,6 +1,7 @@
 #include <linux/module.h>
 #include <linux/device.h>
 #include <linux/fs.h>
+#include <linux/uaccess.h>
 
 /*
 In order to mount this device as a normal user we need to configure
@@ -27,6 +28,11 @@ static int majorNumber;
 static struct class*  charClass  = NULL;
 static struct device* charDevice = NULL;
 
+int read_bytes = 0;
+int device_reads = 0;
+
+char *message = "Rawr\n";
+
 static int dev_open(struct inode *inodep, struct file *filep)
 {
         return 0;
@@ -40,7 +46,13 @@ static int dev_release(struct inode *inodep, struct file *filep)
 static ssize_t dev_read(struct file *filep, char *buffer,
                         size_t len, loff_t *offset)
 {
-        return 0;
+        if (device_reads == 1) {
+                return 0;
+        } else {
+                device_reads++;
+                read_bytes = copy_to_user(buffer, message, strlen(message));
+                return len;
+        }
 }
 
 static ssize_t dev_write(struct file *filep, const char *buffer,
